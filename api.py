@@ -84,7 +84,12 @@ def cleanup_expired_sessions():
 def build_agent():
     tools = indexing()
     llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
-    agent = create_react_agent(llm, tools, messages_modifier=SYSTEM_PROMPT)
+    try:
+        # newer langgraph versions use 'prompt'
+        agent = create_react_agent(llm, tools, prompt=SYSTEM_PROMPT)
+    except TypeError:
+        # older langgraph versions use 'messages_modifier'
+        agent = create_react_agent(llm, tools, messages_modifier=SYSTEM_PROMPT)
     return agent
 
 
