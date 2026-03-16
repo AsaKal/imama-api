@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: imama-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python -m nltk.downloader punkt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: PYTHON_VERSION
+        value: "3.10.0"
