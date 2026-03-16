@@ -4,12 +4,6 @@ Base URL (after deployment): `https://<your-render-service>.onrender.com`
 
 ---
 
-## Authentication
-
-No API key is required at this time. The API is open. If you need to restrict access later, add an API key header.
-
----
-
 ## Endpoints
 
 ### 1. Health Check

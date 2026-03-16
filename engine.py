@@ -2,7 +2,10 @@ from langchain_community.document_loaders import WebBaseLoader, DirectoryLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.tools.retriever import create_retriever_tool
+try:
+    from langchain.tools.retriever import create_retriever_tool
+except ModuleNotFoundError:
+    from langchain_core.tools.retriever import create_retriever_tool
 
 
 
