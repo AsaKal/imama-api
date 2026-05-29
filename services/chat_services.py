@@ -1,39 +1,81 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from db.models import Conversation, Message, User
+import uuid
+
+from db.models import Conversation, Message
 from services.ai_services import generate_response
 from services.pregnancy_services import get_user_pregnancy_data
 from db.database import SessionLocal
 
-app = FastAPI()
 
-# services/chat_service.py
-@app.post("/chat")
 def handle_chat(user_id: int, message: str):
     db = SessionLocal()
 
-    # 1. Save user message
-    user_chat = Conversation(user_id=user_id, message=message, sender="user")
-    db.add(user_chat)
+    conversation = (
+        db.query(Conversation)
+        .filter(Conversation.user_id == str(user_id))
+        .order_by(Conversation.created_at.desc())
+        .first()
+    )
+    if not conversation:
+        conversation = Conversation(
+            id=str(uuid.uuid4()),
+            user_id=str(user_id),
+            title="Chat",
+        )
+        db.add(conversation)
+        db.commit()
+
+    #Save user message
+    user_msg = Message(
+        id=str(uuid.uuid4()),
+        conversation_id=conversation.id,
+        content=message,
+        role="user",
+    )
+    db.add(user_msg)
     db.commit()
 
-    # 2. Get recent messages (memory)
-    get_recent_messages = lambda db, user_id: db.query(Message).join(Conversation).filter(Conversation.user_id == user_id).order_by(Message.created_at.desc()).limit(10).all()
-    history = get_recent_messages(db, user_id)
+    #Get recent messages
+    history = (
+        db.query(Message)
+        .join(Conversation)
+        .filter(Conversation.user_id == user_id)
+        .order_by(Message.created_at.desc())
+        .limit(10)
+        .all()
+    )
 
-    # 3. Get pregnancy context
+    #Build previous conversations for context
+    previous_conversations = [
+    {
+        "message": chat.content,
+        "sender": chat.role,
+        "timestamp": chat.created_at.isoformat()
+    }
+    for chat in history
+]
+    #Get pregnancy context
     pregnancy_data = get_user_pregnancy_data(db, user_id)
 
-    # 4. Generate AI response
+    #Generate AI response
     ai_reply = generate_response(
         message=message,
         history=history,
         pregnancy_data=pregnancy_data
     )
+    
+    
+    
 
-    # 5. Save AI response
-    bot_chat = Conversation(user_id=user_id, message=ai_reply, sender="bot")
-    db.add(bot_chat)
+    #Save AI response
+    bot_msg = Message(
+        id=str(uuid.uuid4()),
+        conversation_id=conversation.id,
+        content=ai_reply,
+        role="assistant",
+    )
+    db.add(bot_msg)
     db.commit()
+    db.close()
 
     return ai_reply
+    
