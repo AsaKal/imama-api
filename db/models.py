@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, String, Text
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from db.database import Base
 import datetime
@@ -16,6 +16,11 @@ class User(Base):
 
     conversations = relationship("Conversation", back_populates="user")
     appointments = relationship("Appointment", back_populates="user")
+    pregnancy_record = relationship(
+        "PregnancyRecord",
+        back_populates="user",
+        uselist=False,
+    )
 
 
 class Conversation(Base):
@@ -62,6 +67,18 @@ class Appointment(Base):
     user = relationship("User", back_populates="appointments")
 
 
+class PregnancyRecord(Base):
+    __tablename__ = "pregnancy_records"
+
+    id = Column(String, primary_key=True)
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    current_week = Column(Integer, nullable=False)
+    symptoms = Column(Text)  # Store symptoms as a comma-separated string
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    user = relationship("User", back_populates="pregnancy_record")
+
+
 class Attachment(Base):
     __tablename__ = "attachments"
 
@@ -95,10 +112,3 @@ class Embedding(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     message = relationship("Message", back_populates="embedding")
-
-
-# Backward-compatible aliases for the original class names.
-Messages = Message
-appointments = Appointment
-attachments = Attachment
-embeddings = Embedding
