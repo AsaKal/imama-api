@@ -2,11 +2,10 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.post("/register")
 def register_user(username: str, password: str, email: str, phone: int) -> bool:
     # Placeholder for actual registration logic
     if username and password:
-        print(f"Registed user {username} successfully")
+        print(f"Registered user {username} successfully")
         return True
     elif username == "":
         print(f"Username can't be empty: {username}")
@@ -20,13 +19,6 @@ def register_user(username: str, password: str, email: str, phone: int) -> bool:
         print("Invalid Credentials!")
     return False
 
-@app.post("/login")
-def login(username: str, password: str):
-    if authenticate_user(username, password):
-        return {"message": "Login successful"}
-    else:
-        return {"message": "Invalid credentials"}, 401
-    
 def authenticate_user(username: str, password: str) -> bool:
     # Placeholder for actual authentication logic
     if username == "user" and username != "" and password == "pass" and password != "":
@@ -39,3 +31,10 @@ def authenticate_user(username: str, password: str) -> bool:
     else:
         print(f"Invalid credentials for user: {username}")
         return False
+    
+def login(username: str, password: str):
+    if authenticate_user(username, password):
+        return {"message": "Login successful"}
+    else:
+        return {"message": "Invalid credentials"}, 401
+    
