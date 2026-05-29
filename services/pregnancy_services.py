@@ -1,27 +1,33 @@
-from fastapi import FastAPI
-from numpy import record
-from pydantic import BaseModel
-from db.models import Conversation, Message, User, Appointment, Attachment, Embedding
-from services.ai_services import generate_response
+from db.models import PregnancyRecord
 
-app = FastAPI()
 
-def get_user_pregnancy_data(db, user_id):
-    # Example query to fetch pregnancy data (this is just a placeholder and should be adapted to your actual database schema)
-    pregnancy_data = {
+def get_user_pregnancy_data(db, user_id, content=None):
+    # Fetch user record
+    record = (
+        db.query(PregnancyRecord)
+        .filter(PregnancyRecord.user_id == user_id)
+        .first()
+    )
+
+    # 2. If no record exists
+    if not record:
+        return {
+            "user_id": user_id,
+            "current_week": None,
+            "trimester": None,
+            "symptoms": [],
+            "description": "No pregnancy data available."
+        }
+
+    # 3. Build response
+    return {
         "user_id": user_id,
         "current_week": record.current_week,
         "trimester": get_trimester(record.current_week),
-        "symptoms": record.symptoms or [],
-        "conversation_id": chats[0].id if chats else None,
-        "previous_conversations": previous_conversations,
+        "symptoms": get_symptoms(record),
         "description": build_description(record)
-        
-        
     }
-    # return pregnancy_data
-    print(f"{user_id} (this is a placeholder function, implement actual data fetching logic)")
-
+    
 def get_trimester(week):
     if week <= 12:
         return "First Trimester"
@@ -32,14 +38,19 @@ def get_trimester(week):
     
 def build_description(record):
     description = f"User is currently in week {record.current_week} of pregnancy, which is in the {get_trimester(record.current_week)}. "
-    if record.symptoms:
-        description += f"User is experiencing the following symptoms: {', '.join(record.symptoms)}. "
+    symptoms = get_symptoms(record)
+    if symptoms:
+        description += f"User is experiencing the following symptoms: {', '.join(symptoms)}. "
     else:
         description += "No data available."
     return description
 
-@app.get("/pregnancy-data/{user_id}")
-def pregnancy_data(user_id: int):
-    # Fetch pregnancy data for the user
-    pregnancy_data = get_user_pregnancy_data(db, user_id)
-    return pregnancy_data
+
+def get_symptoms(record):
+    if not record.symptoms:
+        return []
+    return [
+        symptom.strip()
+        for symptom in record.symptoms.split(",")
+        if symptom.strip()
+    ]
