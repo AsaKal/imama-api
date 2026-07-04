@@ -1,15 +1,8 @@
 fastapi
 uvicorn
-python-multipart
-python-dotenv
-langchain
-langchain-community
-langchain-openai
-langchain-text-splitters
-langgraph
-faiss-cpu
-beautifulsoup4
-numpy
-requests
-nltk
-unstructured
+
+# HuggingFace model inference
+transformers>=4.50.0
+torch
+accelerate
+sentencepiece
