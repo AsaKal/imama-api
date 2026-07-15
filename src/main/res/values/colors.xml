@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#F5F6F2</color>
+    <color name="colorPrimaryDark">#06080f</color>
+    <color name="muted">#8A8F98</color>
+    <color name="user_bubble">#355C7D</color>
+    <color name="bot_bubble">#ECEAE3</color>
+    <color name="accent">#4F9D69</color>
+    <color name="windowBackground">#f2f0ef</color>
+    <color name="online_green">#4F9D69</color>
+    <color name="icon_tint">#1E2124</color>
+    <color name="avatar_bot_bg">#1E2124</color>
+
+    <!-- Landing page -->
+    <color name="purple_deep">#5B21B6</color>
+    <color name="purple_bright">#7C3AED</color>
+    <color name="pink_soft">#F6A8C0</color>
+    <color name="tab_underline">#C2185B</color>
+    <color name="card_surface">#FFFFFF</color>
+    <color name="subtitle_gray">#9CA3AF</color>
+    <color name="blue">#3DFFFFFF</color>
+    <color name="red">#1A000000</color>
+
+    <!-- Popup menu -->
+    <color name="popup_bg">#7C3AED</color>
+    <color name="popup_divider">#8B5CF6</color>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode overrides. Same color NAMES as values/colors.xml —
+         Android automatically picks these when the app is in night mode. -->
+    <color name="bg_paper">#06080F</color>
+    <color name="ink">#F2F0EF</color>
+    <color name="muted">#8A8F98</color>
+    <color name="user_bubble">#355C7D</color>
+    <color name="bot_bubble">#1B1E27</color>
+    <color name="accent">#F2A6B8</color>
+    <color name="online_green">#4F9D69</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#06080F</color>
+    <color name="icon_tint">#FFFFFF</color>
+    <color name="avatar_bot_bg">#2A2D38</color>
+
+    <color name="purple_deep">#3B1470</color>
+    <color name="purple_bright">#5B21B6</color>
+    <color name="pink_soft">#F2A6B8</color>
+    <color name="tab_underline">#F2A6B8</color>
+    <color name="card_surface">#12141C</color>
+    <color name="subtitle_gray">#8A8F98</color>
+
+    <color name="popup_bg">#12141C</color>
+    <color name="popup_divider">#2A2D38</color>
+</resources>
